@@ -1,0 +1,42 @@
+{
+  "name": "rox-client-node",
+  "description": "Utilities for ROX Center clients written with Node.js.",
+  "version": "0.1.2",
+  "main": "./lib",
+  "homepage": "https://github.com/lotaris/rox-client-node",
+  "author": {
+    "name": "Simon Oulevay",
+    "email": "simon.oulevay@lotaris.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/lotaris/rox-client-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/lotaris/rox-client-node/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/lotaris/rox-client-node/blob/master/LICENSE.txt"
+    }
+  ],
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "dependencies": {
+    "deepmerge": "~0.2.7",
+    "electrolyte": "0.0.5",
+    "fs-extra": "~0.12.0",
+    "js-yaml": "~3.2.2",
+    "q": "^1.0.1",
+    "request": "^2.45.0",
+    "underscore": "^1.4.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-bump": "0.0.16",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-jasmine-node": "^0.2.1"
+  }
+}

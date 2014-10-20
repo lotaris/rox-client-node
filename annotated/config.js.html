@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>config.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "Users/unknow/Projects/lotaris/rox-client-node//config.js", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>config.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;underscore&#39;</span><span class="p">),</span>
+    <span class="nx">merge</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;deepmerge&#39;</span><span class="p">),</span>
+    <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">),</span>
+    <span class="nx">yaml</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;js-yaml&#39;</span><span class="p">);</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">env</span><span class="p">,</span> <span class="nx">fs</span><span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">function</span> <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">processor</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">config</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="nx">processor</span> <span class="o">?</span> <span class="nx">processor</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">:</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">parseBooleanEnvVar</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">!!</span><span class="nx">value</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^(?:1|t|true|y|yes)$/</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">Config</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">pick</span><span class="p">(</span><span class="nx">config</span> <span class="o">||</span> <span class="p">{},</span> <span class="s1">&#39;payload&#39;</span><span class="p">,</span> <span class="s1">&#39;project&#39;</span><span class="p">,</span> <span class="s1">&#39;publish&#39;</span><span class="p">,</span> <span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="s1">&#39;servers&#39;</span><span class="p">,</span> <span class="s1">&#39;testRunUid&#39;</span><span class="p">,</span> <span class="s1">&#39;workspace&#39;</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="kd">function</span> <span class="nx">clear</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">name</span> <span class="k">in</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">delete</span> <span class="nx">config</span><span class="p">[</span><span class="nx">name</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Config</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="nx">load</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">customConfig</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">clear</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+      <span class="kd">var</span> <span class="nx">configFiles</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">env</span><span class="p">.</span><span class="nx">HOME</span><span class="p">,</span> <span class="s1">&#39;.rox&#39;</span><span class="p">,</span> <span class="s1">&#39;config.yml&#39;</span><span class="p">),</span>
+        <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_CONFIG</span> <span class="o">||</span> <span class="s1">&#39;rox.yml&#39;</span>
+      <span class="p">];</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>TODO: log warning if yaml is invalid</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">configFiles</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">existsSync</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+          <span class="nx">memo</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">yaml</span><span class="p">.</span><span class="nx">safeLoad</span><span class="p">(</span><span class="nx">fs</span><span class="p">.</span><span class="nx">readFileSync</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="p">{</span> <span class="nx">encoding</span><span class="o">:</span> <span class="s1">&#39;utf-8&#39;</span> <span class="p">})));</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">memo</span><span class="p">;</span>
+      <span class="p">},</span> <span class="p">{</span> <span class="nx">publish</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nx">project</span><span class="o">:</span> <span class="p">{},</span> <span class="nx">payload</span><span class="o">:</span> <span class="p">{}</span> <span class="p">});</span>
+
+      <span class="k">delete</span> <span class="nx">config</span><span class="p">.</span><span class="nx">testRunUid</span><span class="p">;</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">customConfig</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">config</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">customConfig</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">envConfig</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nx">payload</span><span class="o">:</span> <span class="p">{}</span>
+      <span class="p">};</span>
+
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">,</span> <span class="s1">&#39;publish&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_PUBLISH</span><span class="p">,</span> <span class="nx">parseBooleanEnvVar</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">,</span> <span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_SERVER</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">,</span> <span class="s1">&#39;workspace&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_WORKSPACE</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span> <span class="s1">&#39;cache&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_CACHE_PAYLOAD</span><span class="p">,</span> <span class="nx">parseBooleanEnvVar</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span> <span class="s1">&#39;print&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_PRINT_PAYLOAD</span><span class="p">,</span> <span class="nx">parseBooleanEnvVar</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">.</span><span class="nx">payload</span><span class="p">,</span> <span class="s1">&#39;save&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_SAVE_PAYLOAD</span><span class="p">,</span> <span class="nx">parseBooleanEnvVar</span><span class="p">);</span>
+      <span class="nx">addEnvVar</span><span class="p">(</span><span class="nx">envConfig</span><span class="p">,</span> <span class="s1">&#39;testRunUid&#39;</span><span class="p">,</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_TEST_RUN_UID</span><span class="p">);</span>
+
+      <span class="nx">config</span> <span class="o">=</span> <span class="nx">merge</span><span class="p">(</span><span class="nx">config</span><span class="p">,</span> <span class="nx">envConfig</span><span class="p">);</span>
+
+      <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">getServerOptions</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">servers</span><span class="p">)</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">servers</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">server</span><span class="p">]</span> <span class="o">||</span> <span class="p">{}</span> <span class="o">:</span> <span class="p">{};</span>
+    <span class="p">},</span>
+
+    <span class="nx">getProjectOptions</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+      <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{};</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">options</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">pick</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span><span class="p">,</span> <span class="s1">&#39;apiId&#39;</span><span class="p">,</span> <span class="s1">&#39;version&#39;</span><span class="p">,</span> <span class="s1">&#39;category&#39;</span><span class="p">,</span> <span class="s1">&#39;tags&#39;</span><span class="p">,</span> <span class="s1">&#39;tickets&#39;</span><span class="p">));</span>
+      <span class="p">}</span>
+
+      <span class="kd">var</span> <span class="nx">serverOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getServerOptions</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">serverOptions</span><span class="p">.</span><span class="nx">projectApiId</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">options</span><span class="p">.</span><span class="nx">apiId</span> <span class="o">=</span> <span class="nx">serverOptions</span><span class="p">.</span><span class="nx">projectApiId</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">options</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">validate</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">errors</span><span class="p">)</span> <span class="p">{</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="nx">env</span><span class="p">.</span><span class="nx">ROX_CONFIG</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">fs</span><span class="p">.</span><span class="nx">existsSync</span><span class="p">(</span><span class="nx">env</span><span class="p">.</span><span class="nx">ROX_CONFIG</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;No project configuration file found at &#39;</span> <span class="o">+</span> <span class="nx">env</span><span class="p">.</span><span class="nx">ROX_CONFIG</span> <span class="o">+</span> <span class="s1">&#39; (set with $ROX_CONFIG environment variable)&#39;</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span> <span class="o">||</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Project is not configured (set &quot;project.apiId&quot; and &quot;project.version&quot; in configuration file)&#39;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span><span class="p">.</span><span class="nx">apiId</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Project API ID is not set (set &quot;project.apiId&quot; in configuration file)&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">project</span><span class="p">.</span><span class="nx">version</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;Project version is not set (set &quot;project.version&quot; in configuration file)&#39;</span><span class="p">);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">servers</span> <span class="o">||</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">servers</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;No ROX Center server is configured (set &quot;servers&quot; in configuration file)&#39;</span><span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">servers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">server</span><span class="p">,</span> <span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">server</span> <span class="o">||</span> <span class="o">!</span><span class="nx">server</span><span class="p">.</span><span class="nx">apiUrl</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;No API URL is set for ROX Center server &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; (set &quot;servers.&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;.apiUrl&quot; in configuration file)&#39;</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">server</span> <span class="o">||</span> <span class="o">!</span><span class="nx">server</span><span class="p">.</span><span class="nx">apiKeyId</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;No API key ID is set for ROX Center server &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; (set &quot;servers.&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;.apiKeyId&quot; in configuration file)&#39;</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">server</span> <span class="o">||</span> <span class="o">!</span><span class="nx">server</span><span class="p">.</span><span class="nx">apiKeySecret</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">errors</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="s1">&#39;No API key secret is set for ROX Center server &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39; (set &quot;servers.&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;.apiKeySecret&quot; in configuration file)&#39;</span><span class="p">);</span>
+          <span class="p">}</span>
+        <span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">Config</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">[</span><span class="s1">&#39;@require&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;env&#39;</span><span class="p">,</span> <span class="s1">&#39;fs&#39;</span> <span class="p">];</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">[</span><span class="s1">&#39;@singleton&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
